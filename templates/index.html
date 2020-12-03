@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-signin-client_id" content="{{ CLIENT_ID }}">
+  <title>Mainpage</title>
+  <script>
+    function onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      const id_token = googleUser.getAuthResponse().id_token;
+      let xhr = new XMLHttpRequest();
+      xhr.open('POST', '/google/callback');
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onload = (e) => {
+        console.log(e);
+        console.log(xhr.responseText);
+      };
+      xhr.send('idtoken=' + id_token);
+    }
+  </script>
+  <script src="/static/app.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.css"
+    integrity="sha256-67AR2JVjhMZCLVxapLuBSMap5RrXbksv4vlllenHBSE=" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container" style="margin: auto;">
+    <div class="g-signin2" data-onsuccess="onSignIn" style="margin: auto;"></div>
+    <br>
+  </div>
+  <div class="container is-fluid">
+    <form action="/api/add" method="post">
+      <div class="field is-grouped">
+        <div class="control">
+          <input class="input" type="text" placeholder="Name" id="name" name="name">
+        </div>
+        <div class="control">
+          <input class="input" type="text" placeholder="Image URL" id="img" name="img">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="control">
+          <button class="button is-link" type="submit">Submit</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <div class="container is-fluid">
+    {% if img %}
+    <h3>URL</h3>
+    <input type="text" value="{{ URLROOT + 'img/' + img }}">
+    <h3>VIEW LINK</h3>
+    <a href="{{ URLROOT + 'count/' + img }}">CHECK COUNT</a>
+    <h3>COPY THIS ✔</h3>
+    <div>
+      <img src="{{ URLROOT + 'img/' + img }}">
+    </div>
+    {% endif %}
+  </div>
+</body>
+
+</html>
