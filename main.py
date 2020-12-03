@@ -29,7 +29,9 @@ def signin_google():
         try:
             idinfo = id_token.verify_oauth2_token(
                 request.form.get('idtoken'), requests.Request(), CLIENT_ID)
-            # print(idinfo)
+            if cfg.get('WHITELIST_ACTIVE',False):
+                if not idinfo['email'] in cfg.get('WHITELIST',[]):
+                    return abort(500)
             session['id'] = idinfo['sub']
             session['img'] = idinfo['picture']
             session['name'] = idinfo['name']
