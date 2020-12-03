@@ -14,8 +14,9 @@ conn = sqlite3.connect("data.sqlite3", check_same_thread=False)
 curs = conn.cursor()
 curs.execute('CREATE TABLE IF NOT EXISTS counter (id text, name text, userid text, count int, last text, lastinfo text, url text)')
 with open('configs.json') as f:
-    CLIENT_ID = json.load(f)['CLIENT_ID']
-    URLROOT = json.load(f)['URLROOT']
+    cfg = json.load(f)
+    CLIENT_ID = cfg['CLIENT_ID']
+    URLROOT = cfg['URLROOT']
 
 @app.route('/')
 def index():
