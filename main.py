@@ -7,9 +7,13 @@ import json
 import time
 import datetime
 import hashlib
+from flask_cors import CORS, cross_origin
+
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(128)
+CORS(app)
+
 conn = sqlite3.connect("data.sqlite3", check_same_thread=False)
 
 curs = conn.cursor()
@@ -89,6 +93,7 @@ def addcounter():
 
 
 @app.route('/img/<imgid>')
+@cross_origin()
 def showimage(imgid):
     cursor = conn.cursor()
     cursor.execute('SELECT url FROM counter WHERE id = ?', [imgid])
@@ -127,6 +132,7 @@ def countimage(imgid):
 
 
 @app.route('/api/v1/add', methods=['GET', 'POST'])
+@cross_origin()
 def api_v1_add():
     cursor = conn.cursor()
     if request.method == 'POST' and request.is_json and request.json().get('key'):
@@ -190,6 +196,7 @@ def api_v1_add():
 
 
 @app.route('/api/v1/count')
+@cross_origin()
 def api_v1_count():
     cursor = conn.cursor()
     if request.method == 'POST' and request.is_json and request.json().get('key'):
